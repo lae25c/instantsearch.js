@@ -705,6 +705,42 @@ This filtering widget lets the user choose between ranges of price. Those ranges
 
 <div id="priceranges" class="widget-container"></div>
 
+#### clearAll
+
+<div class="code-box">
+  <div class="code-sample-snippet">
+{% highlight javascript %}
+search.addWidget(
+  instantsearch.widgets.clearAll({
+    container: '#clear-all',
+    templates: {
+      link: 'Reset everything'
+    },
+    cssClasses: {
+      root: '',
+      header: '',
+      body: '',
+      footer: '',
+      link: '',
+    }
+  })
+);
+{% endhighlight %}
+  </div>
+  <div class="jsdoc" style='display:none'>
+{% highlight javascript %}
+instantsearch.widgets.clearAll(options);
+{% endhighlight %}
+{% include widget-jsdoc/clearAll.md %}
+  </div>
+</div>
+
+This widgets allows to clear all the current refinements.
+{:.description}
+
+<div id="clearall" class="widget-container"></div>
+
+
 ### Sort
 
 #### indexSelector
