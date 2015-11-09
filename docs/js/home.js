@@ -1,6 +1,69 @@
 /* global $, TweenMax, TimelineMax, ScrollMagic, Power2, Bounce */
 'use strict';
 
+document.addEventListener('DOMContentLoaded', function(){
+  var mapping = function(x) {
+    var res = x;
+    if(x>850) res += 60 * (Math.min(x, 950) - 850);
+    if(x>1600) res += 60 * (Math.min(x, 1700) - 1600);
+    if(x>2500) res += 60 * (Math.min(x, 2600) - 2500);
+    return res;
+  };
+
+  var rand = new PRNG();
+  var radiusScene = 10000;
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x000000, 1/radiusScene);
+  var camera = new THREE.PerspectiveCamera( 55, window.innerWidth/window.innerHeight, 0.1, radiusScene * 10 );
+
+  var renderer = new THREE.WebGLRenderer({ alpha: true });
+
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  document.querySelector('#space').appendChild( renderer.domElement );
+
+  var particles = new THREE.Geometry();
+  var sphere = new THREE.Sphere( new THREE.Vector3(0,0,0), radiusScene);
+  var rand1 = function(){
+    return rand.nextRange(-radiusScene, radiusScene);
+  };
+
+  for(var i = 0; i < 90000; i++ ){
+    var p = new THREE.Vector3(rand1(), rand1(), rand1());
+    p = sphere.clampPoint(p);
+    particles.vertices.push(p);
+  }
+
+  var pMaterial = new THREE.PointsMaterial({
+    color: 0xFFFFFF,
+    size: 1,
+    sizeAttenuation: false
+  });
+  var particleSystem = new THREE.Points(particles, pMaterial);
+
+  scene.add(particleSystem);
+
+  camera.position.z = 0;
+  camera.rotation.x = - Math.PI / 2;
+
+  var currentTSpring = 0;
+
+  var render = function () {
+    var dt = mapping(window.scrollY);
+    currentTSpring += (dt - currentTSpring) / 50 ;
+    requestAnimationFrame( render );
+
+    var angle = currentTSpring/6000;
+
+    camera.position.x = 500 * Math.cos(angle);
+    camera.position.y = 500 * Math.sin(angle);
+    camera.rotation.y = -angle - Math.PI / 2;
+
+    renderer.render(scene, camera);
+  };
+
+  render();
+});
+
 $(function () {
 
   // init scroll magic
@@ -124,95 +187,3 @@ $(function () {
   });
 
 });
-
-
-// Space Canvas
-
-var canvas, context, screenH, screenW, stars = [], fps = 10, numStars = 200;
-
-// Calculate the screen size
-screenH = $(window).height();
-screenW = $(window).width();
-
-// Get the canvas
-canvas = $('#space');
-
-// Fill out the canvas
-canvas.attr('height', screenH);
-canvas.attr('width', screenW);
-context = canvas[0].getContext('2d');
-
-var x, y, len, opacity, star;
-
-// Create all the stars
-for (var i = 0; i < numStars; i++) {
-  x = Math.round(Math.random() * screenW);
-  y = Math.round(Math.random() * screenH);
-  len = 1 + Math.random() * 2;
-  opacity = Math.random();
-
-  // Create a new star and draw
-  star = new Star(x, y, len, opacity);
-
-  // Add the the stars array
-  stars.push(star);
-}
-
-setInterval(animate, 1000 / fps);
-
-// Animate the canvas
-function animate() {
-  context.clearRect(0, 0, screenW, screenH);
-  $.each(stars, function() {
-    this.draw(context);
-  });
-}
-
-// Star
-function Star(x, y, length, opacity) {
-  this.x = parseInt(x);
-  this.y = parseInt(y);
-  this.length = parseInt(length);
-  this.opacity = opacity;
-  this.factor = 1;
-  this.increment = Math.random() * 0.03;
-}
-
-// Draw a star
-Star.prototype.draw = function() {
-  context.rotate((Math.PI * 1 / 10));
-
-  // Save the context
-  context.save();
-
-  // move into the middle of the canvas, just to make room
-  context.translate(this.x, this.y);
-
-  // Change the opacity
-  if (this.opacity > 1) {
-    this.factor = -1;
-  } else if (this.opacity <= 0) {
-    this.factor = 1;
-    this.x = Math.round(Math.random() * screenW);
-    this.y = Math.round(Math.random() * screenH);
-  }
-
-  this.opacity += this.increment * this.factor;
-
-  context.beginPath();
-  for (var i = 5; i--;) {
-    context.lineTo(0, this.length);
-    context.translate(0, this.length);
-    context.rotate((Math.PI * 2 / 10));
-    context.lineTo(0, -this.length);
-    context.translate(0, -this.length);
-    context.rotate(-(Math.PI * 6 / 10));
-  }
-  context.lineTo(0, this.length);
-  context.closePath();
-  context.fillStyle = 'rgba(200, 200, 250, ' + this.opacity + ')';
-  // context.shadowBlur = 5;
-  // context.shadowColor = '#1D96C7';
-  context.fill();
-  context.restore();
-};
