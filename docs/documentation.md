@@ -774,6 +774,55 @@ instantsearch.widgets.priceRanges(options);
 
 <div id="price-ranges" class="widget-container"></div>
 
+#### starsList
+
+<div class="codebox-combo">
+
+<img class="widget-icon pull-left" src="../img/icon-widget-slider.svg">
+This filtering widget lets the user refine by number of stars. The underlying rating need to have from 0 to `max` stars.
+{:.description}
+
+<div class="code-box">
+  <div class="code-sample-snippet">
+{% highlight javascript %}
+search.addWidget(
+  instantsearch.widgets.starsList({
+    container: '#stars',
+    facetName: 'price',
+    labels: {
+      andUp: '& Up'
+    },
+    cssClasses: {
+      root: '',
+      header: '',
+      body: '',
+      footer: '',
+      list: '',
+      item: '',
+      active: '',
+      link: '',
+      disabledLink: '',
+      star: '',
+      emptyStar: '',
+      active: ''
+    }
+  })
+);
+{% endhighlight %}
+  </div>
+  <div class="jsdoc" style='display:none'>
+{% highlight javascript %}
+instantsearch.widgets.starsList(options);
+{% endhighlight %}
+
+{% include widget-jsdoc/starsList.md %}
+  </div>
+</div>
+
+</div>
+
+<div id="stars" class="widget-container"></div>
+
 ### Sort
 
 #### indexSelector
