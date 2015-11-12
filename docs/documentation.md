@@ -774,6 +774,47 @@ instantsearch.widgets.priceRanges(options);
 
 <div id="price-ranges" class="widget-container"></div>
 
+#### numericSelector
+
+<div class="codebox-combo">
+
+<img class="widget-icon pull-left" src="../img/icon-widget-slider.svg">
+This filtering widget lets the user choose between numerical refinements from a dropdown menu.
+{:.description}
+
+<div class="code-box">
+  <div class="code-sample-snippet">
+{% highlight javascript %}
+search.addWidget(
+  instantsearch.widgets.numericSelector({
+    container: '#popularity-selector',
+    attributeName: 'popularity',
+    operator: '<=',
+    options: [
+      { label: 'Top 1', value: 1 },
+      { label: 'Top 10', value: 10 },
+      { label: 'Top 100', value: 100 }
+    ],
+    cssClasses: {
+      select: ''
+    }
+  })
+);
+{% endhighlight %}
+  </div>
+  <div class="jsdoc" style='display:none'>
+{% highlight javascript %}
+instantsearch.widgets.numericSelector(options);
+{% endhighlight %}
+
+{% include widget-jsdoc/numericSelector.md %}
+  </div>
+</div>
+
+</div>
+
+<div id="popularity-selector" class="widget-container"></div>
+
 ### Sort
 
 #### indexSelector
